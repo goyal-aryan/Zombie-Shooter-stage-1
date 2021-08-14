@@ -5,6 +5,7 @@ var zombie
 var bulletImage, bullet;
 var invisibleGround, invisibleGround2, invisibleGround3, invisibleGround4;
 var explosion;
+var heartImage, heart;
 
 
 function preload() {
@@ -13,6 +14,7 @@ function preload() {
     shooter_shooting = loadImage("assets/shooter_3.png")
         //zombieAnimation = loadImage("assets/zombieKnife.gif")
     bulletImage = loadImage("assets/bullets.png")
+    heartImage = loadImage("assets/heart_1.png")
 
     bgImg = loadImage("assets/bg.jpeg")
     explosion = loadSound("assets/gunShot.mp3")
@@ -50,6 +52,10 @@ function setup() {
 
     invisibleGround4 = createSprite(windowWidth - 800, windowHeight / 2, 10, windowHeight)
     invisibleGround4.visible = false;
+
+    heart = createSprite(windowWidth - 1440, windowHeight - 700, 10, 10)
+    heart.scale = 0.5;
+    heart.addImage(heartImage)
 
     bulletGroup = createGroup();
 
@@ -104,6 +110,7 @@ function shootBullet() {
     bullet = createSprite(player.position.x, player.position.y - 25, 50, 20)
     bullet.addImage(bulletImage)
     bullet.scale = 0.05
-    bullet.velocityX = 7
+    bullet.velocityX = 20
+    bullet.lifetime = windowWidth / 20
     bulletGroup.add(bullet)
 }
