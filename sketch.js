@@ -6,7 +6,7 @@ var bulletImage, bullet;
 var invisibleGround, invisibleGround2, invisibleGround3, invisibleGround4;
 var explosion;
 var heartImage, heart;
-
+var zombie2;
 
 function preload() {
 
