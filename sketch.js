@@ -17,7 +17,7 @@ function preload() {
     heartImage = loadImage("assets/heart_1.png")
 
     bgImg = loadImage("assets/bg.jpeg")
-    explosion = loadSound("assets/gunShot.mp3")
+    explosion = loadSound("assets/GunShot.mp3")
 
 }
 
