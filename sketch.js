@@ -1,20 +1,30 @@
 var bg, bgImg;
 var player, shooterImg, shooter_shooting;
-var zombieAnimation;
-var zombie
+var zombie1, zombie2, zombie3, zombie4, zombie5;
+var zombieImage, zombieImage2, zombieImage3, zombieImage4, zombieImage5;
+var rightzombieImage;
 var bulletImage, bullet;
 var invisibleGround, invisibleGround2, invisibleGround3, invisibleGround4;
 var explosion;
 var heartImage, heart;
-var zombie2;
+var PLAY = 1;
+var END = 0;
+var gameState = PLAY;
+var score = 0;
+
 
 function preload() {
 
     shooterImg = loadImage("assets/shooter_2.png")
     shooter_shooting = loadImage("assets/shooter_3.png")
-        //zombieAnimation = loadImage("assets/zombieKnife.gif")
     bulletImage = loadImage("assets/bullets.png")
     heartImage = loadImage("assets/heart_1.png")
+    zombieImage = loadImage("assets/zombie.png")
+    rightzombieImage = loadImage("assets/rightzombie.png")
+        // zombieImage2 = loadImage("")
+        // zombieImage3 = loadImage("")
+        // zombieImage4 = loadImage("")
+        // zombieImage5 = loadImage("")
 
     bgImg = loadImage("assets/bg.jpeg")
     explosion = loadSound("assets/GunShot.mp3")
@@ -31,9 +41,6 @@ function setup() {
     bg.addImage(bgImg)
     bg.scale = 1.1
 
-    // zombie = createSprite(800, 200, 10, 10)
-    // zombie.addImage(zombieAnimation);
-
 
     //creating the player sprite
     player = createSprite(displayWidth - 1150, displayHeight - 300, 50, 50);
@@ -41,17 +48,20 @@ function setup() {
     player.scale = 0.3;
     player.setCollider("rectangle", 0, 0, 300, 450);
 
-    invisibleGround = createSprite(windowWidth / 2, windowHeight - 700, windowWidth, 10)
-    invisibleGround.visible = false;
+    topGround = createSprite(windowWidth / 2, windowHeight - 700, windowWidth, 10)
+    topGround.visible = false;
 
-    invisibleGround2 = createSprite(windowWidth / 2, windowHeight - 100, windowWidth, 10)
-    invisibleGround2.visible = false;
+    bottomGround = createSprite(windowWidth / 2, windowHeight - 100, windowWidth, 10)
+    bottomGround.visible = false;
 
-    invisibleGround3 = createSprite(windowWidth - 1500, windowHeight / 2, 10, windowHeight)
-    invisibleGround3.visible = false;
+    leftGround = createSprite(windowWidth - 1500, windowHeight / 2, 10, windowHeight)
+    leftGround.visible = true;
 
-    invisibleGround4 = createSprite(windowWidth - 800, windowHeight / 2, 10, windowHeight)
-    invisibleGround4.visible = false;
+    rightGround = createSprite(windowWidth - 800, windowHeight / 2, 10, windowHeight)
+    rightGround.visible = false;
+
+    mostRightGround = createSprite(windowWidth - 100, windowHeight / 2, 10, windowHeight)
+    mostRightGround.visible = false;
 
     heart = createSprite(windowWidth - 1440, windowHeight - 700, 10, 10)
     heart.scale = 0.5;
@@ -59,15 +69,35 @@ function setup() {
 
     bulletGroup = createGroup();
 
+    spawnZombies()
+    zombie.addImage("left", zombieImage);
+    zombie.addImage("right", rightzombieImage)
+
+
+
 }
 
 function draw() {
     background(0);
 
-    player.collide(invisibleGround)
-    player.collide(invisibleGround2)
-    player.collide(invisibleGround3)
-    player.collide(invisibleGround4)
+    //if (gameState === PLAY) {
+    player.collide(topGround)
+    player.collide(bottomGround)
+    player.collide(leftGround)
+    player.collide(rightGround)
+
+    if (zombie.bounceOff(leftGround)) {
+        zombie.addImage("right", rightzombieImage)
+    }
+
+    if (zombie.bounceOff(mostRightGround)) {
+        zombie.addImage("left", zombieImage)
+    }
+
+    if (bulletGroup.isTouching(zombie)) {
+        zombie.destroy()
+        score += 5
+    }
 
     //moving the player up and down and making the game mobile compatible using touches
     if (keyDown("UP_ARROW") || touches.length > 0) {
@@ -104,6 +134,12 @@ function draw() {
 
     drawSprites();
 
+    zombie.bounceOff(topGround)
+    zombie.bounceOff(bottomGround)
+    zombie.bounceOff(leftGround)
+    zombie.bounceOff(mostRightGround)
+        //}
+
 }
 
 function shootBullet() {
@@ -113,4 +149,11 @@ function shootBullet() {
     bullet.velocityX = 20
     bullet.lifetime = windowWidth / 20
     bulletGroup.add(bullet)
+}
+
+function spawnZombies() {
+    zombie = createSprite(1100, 300, 20, 20);
+    zombie.debug = true
+    zombie.velocityX = -5;
+    zombie.scale = 0.3;
 }
